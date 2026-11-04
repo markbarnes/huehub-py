@@ -184,7 +184,9 @@ Add to `claude_desktop_config.json`:
 
 ### Available MCP tools
 
-`hue_get_bridge_info` · `hue_list_lights` · `hue_turn_on` · `hue_turn_off` · `hue_set_light` · `hue_list_rooms` · `hue_set_room` · `hue_list_zones` · `hue_set_zone` · `hue_list_scenes` · `hue_activate_scene` · `hue_list_devices` · `hue_list_sensors` · `hue_list_entertainment_zones` · `hue_get_raw`
+`hue_get_bridge_info` · `hue_list_lights` · `hue_get_light` · `hue_set_light` · `hue_set_light_color_temp` · `hue_list_rooms` · `hue_set_room_on` · `hue_set_room` · `hue_list_zones` · `hue_set_zone` · `hue_list_scenes` · `hue_activate_scene` · `hue_list_devices` · `hue_list_motion_sensors` · `hue_list_temperature_sensors` · `hue_list_light_level_sensors` · `hue_list_contact_sensors` · `hue_all_off` · `hue_diagnostics` · `hue_refresh_resources`
+
+`hue_diagnostics` helps when lights don't respond. It reports devices with Zigbee connectivity problems (with room, model and firmware), low batteries, pending firmware updates, lights stored at brightness 0, and the bridge's Zigbee channel. A light's `reachable` field reflects its device's Zigbee connectivity: it is `true` only when the device is `connected`.
 
 ---
 
