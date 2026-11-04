@@ -366,9 +366,9 @@ def doctor() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {"check": r[0], "status": r[1], "detail": r[2]} for r in results
-                ])
+                _json.dumps(
+                    [{"check": r[0], "status": r[1], "detail": r[2]} for r in results]
+                )
             )
             return
 
@@ -413,13 +413,15 @@ def listen(
                     continue
                 if _json_output:
                     _out.print_json(
-                        _json.dumps({
-                            "type": event.type,
-                            "resource_type": event.resource_type,
-                            "resource_id": event.resource_id,
-                            "timestamp": event.timestamp,
-                            "data": event.data,
-                        })
+                        _json.dumps(
+                            {
+                                "type": event.type,
+                                "resource_type": event.resource_type,
+                                "resource_id": event.resource_id,
+                                "timestamp": event.timestamp,
+                                "data": event.data,
+                            }
+                        )
                     )
                 else:
                     _out.print(
@@ -463,16 +465,18 @@ def lights_list(
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": lig.id,
-                        "name": lig.name,
-                        "on": lig.is_on,
-                        "brightness": lig.brightness,
-                        "reachable": lig.is_reachable,
-                    }
-                    for lig in lights
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": lig.id,
+                            "name": lig.name,
+                            "on": lig.is_on,
+                            "brightness": lig.brightness,
+                            "reachable": lig.is_reachable,
+                        }
+                        for lig in lights
+                    ]
+                )
             )
             return
 
@@ -594,17 +598,19 @@ def rooms_list() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": r.id,
-                        "name": r.name,
-                        "lights": len(r.light_ids),
-                        "is_on": gl_map[r.grouped_light_id].is_on
-                        if r.grouped_light_id in gl_map
-                        else None,
-                    }
-                    for r in rooms
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": r.id,
+                            "name": r.name,
+                            "lights": len(r.light_ids),
+                            "is_on": gl_map[r.grouped_light_id].is_on
+                            if r.grouped_light_id in gl_map
+                            else None,
+                        }
+                        for r in rooms
+                    ]
+                )
             )
             return
 
@@ -728,17 +734,19 @@ def zones_list() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": z.id,
-                        "name": z.name,
-                        "lights": len(z.light_ids),
-                        "is_on": gl_map[z.grouped_light_id].is_on
-                        if z.grouped_light_id in gl_map
-                        else None,
-                    }
-                    for z in zones
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": z.id,
+                            "name": z.name,
+                            "lights": len(z.light_ids),
+                            "is_on": gl_map[z.grouped_light_id].is_on
+                            if z.grouped_light_id in gl_map
+                            else None,
+                        }
+                        for z in zones
+                    ]
+                )
             )
             return
 
@@ -847,15 +855,17 @@ def scenes_list(
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": s.id,
-                        "name": s.name,
-                        "group": group_map.get(s.group_id, s.group_id),
-                        "active": s.is_active,
-                    }
-                    for s in scenes
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": s.id,
+                            "name": s.name,
+                            "group": group_map.get(s.group_id, s.group_id),
+                            "active": s.is_active,
+                        }
+                        for s in scenes
+                    ]
+                )
             )
             return
 
@@ -913,15 +923,17 @@ def devices_list() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": d.id,
-                        "name": d.name,
-                        "product": d.product_name,
-                        "manufacturer": d.manufacturer,
-                    }
-                    for d in devices
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": d.id,
+                            "name": d.name,
+                            "product": d.product_name,
+                            "manufacturer": d.manufacturer,
+                        }
+                        for d in devices
+                    ]
+                )
             )
             return
 
@@ -1018,16 +1030,18 @@ def motion() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": s.id,
-                        "name": s.name,
-                        "motion": s.motion_detected,
-                        "valid": s.motion_valid,
-                        "reachable": s.is_reachable,
-                    }
-                    for s in sensors
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": s.id,
+                            "name": s.name,
+                            "motion": s.motion_detected,
+                            "valid": s.motion_valid,
+                            "reachable": s.is_reachable,
+                        }
+                        for s in sensors
+                    ]
+                )
             )
             return
 
@@ -1056,15 +1070,17 @@ def temperature() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": s.id,
-                        "name": s.name,
-                        "temp_celsius": s.temperature_celsius,
-                        "valid": s.temperature_valid,
-                    }
-                    for s in sensors
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": s.id,
+                            "name": s.name,
+                            "temp_celsius": s.temperature_celsius,
+                            "valid": s.temperature_valid,
+                        }
+                        for s in sensors
+                    ]
+                )
             )
             return
 
@@ -1093,15 +1109,17 @@ def light_level() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": s.id,
-                        "name": s.name,
-                        "lux": s.light_level_lux,
-                        "valid": s.light_level_valid,
-                    }
-                    for s in sensors
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": s.id,
+                            "name": s.name,
+                            "lux": s.light_level_lux,
+                            "valid": s.light_level_valid,
+                        }
+                        for s in sensors
+                    ]
+                )
             )
             return
 
@@ -1126,15 +1144,17 @@ def contact() -> None:
 
         if _json_output:
             _out.print_json(
-                _json.dumps([
-                    {
-                        "id": s.id,
-                        "name": s.name,
-                        "closed": s.contact,
-                        "reachable": s.is_reachable,
-                    }
-                    for s in sensors
-                ])
+                _json.dumps(
+                    [
+                        {
+                            "id": s.id,
+                            "name": s.name,
+                            "closed": s.contact,
+                            "reachable": s.is_reachable,
+                        }
+                        for s in sensors
+                    ]
+                )
             )
             return
 
