@@ -8,6 +8,8 @@ whose stored brightness is 0.
 import logging
 from typing import Any
 
+from huehub._parsers import is_reachable_status
+
 log = logging.getLogger(__name__)
 
 LOW_BATTERY_LEVEL = 20
@@ -85,7 +87,7 @@ def _unreachable(
 ) -> list[dict[str, Any]]:
     result = []
     for item in raw_zigbee:
-        if item.get("status") == "connected":
+        if is_reachable_status(item.get("status")):
             continue
         device_id = _owner(item)
         product = (devices.get(device_id) or {}).get("product_data") or {}
