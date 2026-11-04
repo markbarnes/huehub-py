@@ -1,7 +1,7 @@
 """Bridge health diagnostics built from the raw CLIP v2 resource list.
 
-Surfaces the usual causes of lights not responding: Zigbee connectivity
-problems, low switch/sensor batteries, pending firmware updates, and lights
+Surfaces the usual causes of lights not responding: Zigbee and Zigbee Green
+Power connectivity problems, devices with no connectivity data, low switch/sensor batteries, pending firmware updates, and lights
 whose stored brightness is 0.
 """
 
@@ -23,8 +23,8 @@ def build_diagnostics(raw: list[dict]) -> dict[str, Any]:
 
     Returns:
         Dict with ``zigbee_channel``, ``unreachable_devices``,
-        ``low_batteries``, ``pending_updates``, ``zero_brightness_lights``
-        and ``summary``.
+        ``unknown_connectivity_devices``, ``low_batteries``,
+        ``pending_updates``, ``zero_brightness_lights`` and ``summary``.
     """
     by_type: dict[str, list[dict]] = {}
     for item in raw:
@@ -33,11 +33,14 @@ def build_diagnostics(raw: list[dict]) -> dict[str, Any]:
     devices = {d["id"]: d for d in by_type.get("device", []) if "id" in d}
     rooms = _room_by_device(by_type.get("room", []))
 
+    raw_conn = by_type.get("zigbee_connectivity", []) + by_type.get(
+        "zgp_connectivity", []
+    )
+
     report: dict[str, Any] = {
         "zigbee_channel": _zigbee_channel(by_type.get("zigbee_connectivity", [])),
-        "unreachable_devices": _unreachable(
-            by_type.get("zigbee_connectivity", []), devices, rooms
-        ),
+        "unreachable_devices": _unreachable(raw_conn, devices, rooms),
+        "unknown_connectivity_devices": _unknown_connectivity(raw_conn, devices, rooms),
         "low_batteries": _low_batteries(by_type.get("device_power", []), devices),
         "pending_updates": _pending_updates(
             by_type.get("device_software_update", []), devices
@@ -50,6 +53,7 @@ def build_diagnostics(raw: list[dict]) -> dict[str, Any]:
         "low_batteries": len(report["low_batteries"]),
         "pending_updates": len(report["pending_updates"]),
         "zero_brightness_lights": len(report["zero_brightness_lights"]),
+        "unknown_connectivity": len(report["unknown_connectivity_devices"]),
     }
     log.debug("Diagnostics summary: %s", report["summary"])
     return report
@@ -99,6 +103,27 @@ def _unreachable(
                 "model_id": product.get("model_id"),
                 "product_name": product.get("product_name"),
                 "software_version": product.get("software_version"),
+            }
+        )
+    return sorted(result, key=lambda d: d["name"])
+
+
+def _unknown_connectivity(
+    raw_conn: list[dict], devices: dict[str, dict], rooms: dict[str, str]
+) -> list[dict[str, Any]]:
+    """Devices the bridge reports no connectivity for, so reachability is a guess."""
+    known = {_owner(item) for item in raw_conn}
+    result = []
+    for device_id, device in devices.items():
+        if device_id in known:
+            continue
+        product = device.get("product_data") or {}
+        result.append(
+            {
+                "name": _name(device_id, devices),
+                "room": rooms.get(device_id),
+                "model_id": product.get("model_id"),
+                "product_name": product.get("product_name"),
             }
         )
     return sorted(result, key=lambda d: d["name"])
