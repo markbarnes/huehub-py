@@ -121,7 +121,25 @@ class TestBuildDiagnostics:
             "low_batteries": 1,
             "pending_updates": 1,
             "zero_brightness_lights": 1,
+            "unknown_connectivity": 1,
         }
+
+    def test_zgp_connectivity_issue_is_unreachable(self, raw: list[dict]) -> None:
+        raw.append(_owned("zgp_connectivity", "d4", status="disconnected"))
+        result = build_diagnostics(raw)
+        names = [d["name"] for d in result["unreachable_devices"]]
+        assert names == ["Lamp B", "Sensor"]
+        assert result["unknown_connectivity_devices"] == []
+
+    def test_unknown_connectivity_devices(self, raw: list[dict]) -> None:
+        assert build_diagnostics(raw)["unknown_connectivity_devices"] == [
+            {
+                "name": "Sensor",
+                "room": None,
+                "model_id": "LWU001",
+                "product_name": "Hue white lamp",
+            }
+        ]
 
     def test_missing_status_counts_as_reachable(self, raw: list[dict]) -> None:
         raw.append(
