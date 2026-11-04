@@ -145,8 +145,10 @@ class TestBuildDiagnostics:
         raw.append(
             {"id": "zb-x", "type": "zigbee_connectivity", "owner": {"rid": "d4"}}
         )
-        names = [d["name"] for d in build_diagnostics(raw)["unreachable_devices"]]
-        assert names == ["Lamp B"]
+        result = build_diagnostics(raw)
+        assert [d["name"] for d in result["unreachable_devices"]] == ["Lamp B"]
+        unknown = [d["name"] for d in result["unknown_connectivity_devices"]]
+        assert unknown == ["Sensor"]
 
     def test_empty(self) -> None:
         result = build_diagnostics([])

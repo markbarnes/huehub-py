@@ -111,8 +111,8 @@ def _unreachable(
 def _unknown_connectivity(
     raw_conn: list[dict], devices: dict[str, dict], rooms: dict[str, str]
 ) -> list[dict[str, Any]]:
-    """Devices the bridge reports no connectivity for, so reachability is a guess."""
-    known = {_owner(item) for item in raw_conn}
+    """Devices with no connectivity status, so their reachability is a guess."""
+    known = {_owner(item) for item in raw_conn if item.get("status")}
     result = []
     for device_id, device in devices.items():
         if device_id in known:
