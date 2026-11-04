@@ -123,6 +123,13 @@ class TestBuildDiagnostics:
             "zero_brightness_lights": 1,
         }
 
+    def test_missing_status_counts_as_reachable(self, raw: list[dict]) -> None:
+        raw.append(
+            {"id": "zb-x", "type": "zigbee_connectivity", "owner": {"rid": "d4"}}
+        )
+        names = [d["name"] for d in build_diagnostics(raw)["unreachable_devices"]]
+        assert names == ["Lamp B"]
+
     def test_empty(self) -> None:
         result = build_diagnostics([])
         assert result["zigbee_channel"] is None
