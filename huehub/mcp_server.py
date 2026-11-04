@@ -439,6 +439,17 @@ async def hue_all_off() -> dict[str, Any]:
 
 
 @mcp.tool()
+async def hue_diagnostics() -> dict[str, Any]:
+    """Diagnose why lights may not respond.
+
+    Reports devices with Zigbee connectivity problems, low batteries,
+    pending firmware updates, lights stored at brightness 0, and the
+    bridge's Zigbee channel.
+    """
+    return await _get_client().diagnose()
+
+
+@mcp.tool()
 async def hue_refresh_resources() -> dict[str, Any]:
     """Force a fresh fetch of all resources from the bridge, bypassing cache."""
     resources = await _get_client().get_all_resources(refresh=True)

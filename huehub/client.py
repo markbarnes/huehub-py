@@ -41,6 +41,7 @@ from huehub._parsers import (
 from huehub.cache import ResourceCache
 from huehub.color import parse_color_input
 from huehub.config import HueConfig, load_config
+from huehub.diagnostics import build_diagnostics
 from huehub.exceptions import (
     AmbiguousNameError,
     AuthError,
@@ -563,6 +564,14 @@ class HueBridgeClient:
     # ------------------------------------------------------------------
     # Global controls
     # ------------------------------------------------------------------
+
+    async def diagnose(self) -> dict:
+        """Report bridge health from a fresh, uncached resource fetch.
+
+        Returns:
+            Diagnostics dict; see :func:`huehub.diagnostics.build_diagnostics`.
+        """
+        return build_diagnostics(await self._rest_get("/resource"))
 
     async def all_off(self) -> None:
         """Turn off all lights on the bridge.
